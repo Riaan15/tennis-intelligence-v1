@@ -48,21 +48,22 @@ ul{line-height:1.55}.small{font-size:13px}.center{text-align:center}
 
 <section id="s3" class="screen">
 <button class="back" onclick="show('s2')">← Back</button>
-<h1>Choose a Challenge</h1><p class="sub">A Challenge gives you a progression, not just one activity.</p><div id="challengeList"></div>
-</section>
-
-<section id="s4" class="screen">
-<button class="back" onclick="show('s3')">← Back</button>
-<div id="setupHead"></div>
+<div id="challengeHead"></div>
+<div id="setupArea" style="display:none">
 <div class="panel">
-<div class="two"><div><label>Players</label><input id="players" type="number" min="2" value="5"></div><div><label>Courts</label><input id="courts" type="number" min="1" value="2"></div></div>
-<div class="actions"><button onclick="recommend()">Recommend setup</button></div>
+<h3>Set up your session</h3>
+<div class="two">
+<div><label>Players</label><input id="players" type="number" min="2" value="5"></div>
+<div><label>Courts</label><input id="courts" type="number" min="1" value="2"></div>
+</div>
+<div class="actions"><button onclick="recommend()">Build my session</button></div>
 </div>
 <div id="recommendation"></div>
+</div>
 </section>
 
 <section id="s5" class="screen">
-<button class="back" onclick="show('s4')">← Back</button>
+<button class="back" onclick="show('s3')">← Back</button>
 <div id="liveHead"></div>
 <div class="steps" id="progressDots"></div>
 <div class="panel hero"><div class="stageTitle" id="stageNumber"></div><h2 id="stageName"></h2><div class="question" id="stageQuestion"></div></div>
@@ -134,21 +135,29 @@ const C=[
 let state={sit:null,str:null,ch:null,setup:null,stage:0,ratings:{},testerName:localStorage.getItem('ti_tester_name')||''};
 
 function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
-function enterTest(){let n=document.getElementById('testerName').value.trim(),code=document.getElementById('testerCode').value.trim();if(!n){gateError.textContent='Please enter your name.';return}if(code!=='TI-V1-TEST'){gateError.textContent='That tester code is not recognised.';return}state.testerName=n;localStorage.setItem('ti_tester_name',n);show('s1')}
+function enterTest(){let n=document.getElementById('testerName').value.trim(),code=document.getElementById('testerCode').value.trim();if(!n){document.getElementById('gateError').textContent='Please enter your name.';return}if(code!=='TI-V1-TEST'){document.getElementById('gateError').textContent='That tester code is not recognised.';return}state.testerName=n;localStorage.setItem('ti_tester_name',n);show('s1')}
 function render(){situationsEl.innerHTML=situations.map(x=>`<div class="card" onclick="pickSit('${x.id}')"><strong>${x.name}</strong><small>${x.format}</small></div>`).join('');strategiesEl.innerHTML=strategies.map(x=>`<div class="card" onclick="pickStr('${x}')"><strong>${x}</strong></div>`).join('')}
 function pickSit(id){state.sit=situations.find(x=>x.id===id);show('s2')}
-function pickStr(str){state.str=str;let cs=C.filter(c=>c.s===state.sit.id&&c.str===str);challengeList.innerHTML=cs.length?cs.map(c=>`<div class="panel card" onclick="pickChallenge(${c.id})"><span class="pill">${c.phase}</span><span class="pill">${state.sit.format}</span><h2>${c.title}</h2><div class="question">${c.q}</div><p class="muted">${c.summary}</p><div class="small">This Challenge has a 6-stage progression.</div></div>`).join(''):`<div class="panel"><h2>Coming Soon</h2><p>We haven't built a Challenge for this combination yet.</p></div>`;show('s3')}
-function pickChallenge(id){state.ch=C.find(c=>c.id===id);setupHead.innerHTML=`<span class="pill">${state.sit.name}</span><span class="pill">${state.sit.format}</span><span class="pill">${state.ch.phase}</span><h1>${state.ch.title}</h1><div class="question">${state.ch.q}</div>`;show('s4')}
-function recommend(){let p=+players.value,c=+courts.value,fmt=state.sit.format,unit=fmt==='Singles'?2:4;if(p<unit){recommendation.innerHTML=`<div class="panel"><b>Need at least ${unit} players for ${fmt.toLowerCase()}.</b></div>`;return}let base=Math.floor(p/c),extra=p%c,courts=[];for(let i=0;i<c;i++){let n=base+(i<extra?1:0);if(n>0)courts.push(n)}let courtText=courts.map((n,i)=>`<div class="panel"><b>Court ${i+1}</b><p>${n} players — full-court ${fmt.toLowerCase()}.</p>${n<=unit?'<p>Continuous play.</p>':'<p><b>Score-driven rotation:</b> PLAY → SCORE → ROTATE → PLAY. Players keep score; use the Challenge outcome to decide stay/rotate.</p>'}</div>`).join('');recommendation.innerHTML=`<div class="panel hero"><span class="pill">${fmt}</span><h2>Recommended setup</h2><p><b>${p} players / ${c} court${c>1?'s':''}</b></p><div class="notice"><b>Challenge scoring</b><br>${state.ch.connectScore}</div><p class="muted">Players manage the score. The coach observes and moves between courts.</p></div>${courtText}<div class="actions"><button onclick="startProgression()">Start Challenge</button></div>`;state.setup={players:p,courts:c,format:fmt}}
+function pickStr(str){state.str=str;let cs=C.filter(c=>c.s===state.sit.id&&c.str===str);document.getElementById('challengeHead').innerHTML=cs.length?cs.map(c=>`<div class="panel card" onclick="pickChallenge(${c.id})"><span class="pill">${c.phase}</span><span class="pill">${state.sit.format}</span><h2>${c.title}</h2><div class="question">${c.q}</div><p class="muted">${c.summary}</p><div class="small">6-stage progression: Connect → Explore → Develop → Adapt → Live Play → Transfer</div></div>`).join(''):`<div class="panel"><h2>Coming Soon</h2><p>We haven't built a Challenge for this combination yet.</p></div>`;show('s3')}
+function pickChallenge(id){state.ch=C.find(c=>c.id===id);document.getElementById('challengeHead').innerHTML=`<span class="pill">${state.sit.name}</span><span class="pill">${state.sit.format}</span><span class="pill">${state.ch.phase}</span><div class="panel hero"><h1>${state.ch.title}</h1><div class="question">${state.ch.q}</div><p class="muted">${state.ch.summary}</p><div class="small"><b>Progression:</b> Connect → Explore → Develop → Adapt → Live Play → Transfer</div></div>`;document.getElementById('setupArea').style.display='block';document.getElementById('recommendation').innerHTML='';show('s3')}
+function recommend(){if(!state.ch){return}let p=+document.getElementById('players').value,c=+document.getElementById('courts').value,fmt=state.sit.format,unit=fmt==='Singles'?2:4;if(p<unit){document.getElementById('recommendation').innerHTML=`<div class="panel"><b>Need at least ${unit} players for ${fmt.toLowerCase()}.</b></div>`;return}let base=Math.floor(p/c),extra=p%c,courts=[];for(let i=0;i<c;i++){let n=base+(i<extra?1:0);if(n>0)courts.push(n)}let courtText=courts.map((n,i)=>`<div class="panel"><b>Court ${i+1}</b><p>${n} players — full-court ${fmt.toLowerCase()}.</p>${n<=unit?'<p>Continuous play.</p>':'<p><b>Score-driven rotation:</b> PLAY → SCORE → ROTATE → PLAY. Players keep score; use the Challenge outcome to decide stay/rotate.</p>'}</div>`).join('');document.getElementById('recommendation').innerHTML=`<div class="panel hero"><span class="pill">${fmt}</span><span class="pill">Session Setup</span><h2>Recommended setup</h2><p><b>${p} players / ${c} court${c>1?'s':''}</b></p><div class="notice"><b>Challenge scoring</b><br>${state.ch.connectScore}</div><p class="muted">Players manage the score. The coach observes and moves between courts.</p></div>${courtText}<div class="actions"><button onclick="startProgression()">Start Challenge</button></div>`;state.setup={players:p,courts:c,format:fmt}}
 function startProgression(){state.stage=0;renderStage();show('s5')}
-function renderStage(){let st=stagesFor(state.ch)[state.stage],all=stagesFor(state.ch);liveHead.innerHTML=`<span class="pill">${state.sit.name}</span><span class="pill">${state.sit.format}</span><span class="pill">${state.ch.str}</span><h1>${state.ch.title}</h1><div class="question">${state.ch.q}</div>`;progressDots.innerHTML=all.map((x,i)=>`<div class="stepdot ${i<=state.stage?'on':''}"></div>`).join('');stageNumber.textContent=`STAGE ${state.stage+1} OF ${all.length}`;stageName.textContent=st.name;stageQuestion.textContent=st.q;stageSetup.textContent=st.setup;stagePlay.textContent=st.play;stageScore.textContent=st.score;stageLook.textContent=st.look;stageAdapt.textContent=st.adapt;nextBtn.textContent=state.stage===all.length-1?'Finish Challenge →':'Next Stage →'}
-function nextStage(){if(state.stage<5){state.stage++;renderStage()}else{lens.innerHTML=`<p>${state.ch.q}</p><ul><li>Did players find their own solutions?</li><li>Did the scoring make the game problem matter?</li><li>Did players adapt when the opponent changed?</li><li>Could you leave the court for 2–3 minutes and have the Challenge keep working?</li></ul>`;why.innerHTML=`<span class="pill">WHY THIS WORKS</span><p>${state.ch.summary}</p><p>The progression moves from intention and exploration to interaction, adaptation and transfer. The coach changes the environment rather than prescribing the technical answer.</p>`;show('s6')}}
-function prevStage(){if(state.stage>0){state.stage--;renderStage()}else show('s4')}
+function renderStage(){let st=stagesFor(state.ch)[state.stage],all=stagesFor(state.ch);document.getElementById('liveHead').innerHTML=`<span class="pill">${state.sit.name}</span><span class="pill">${state.sit.format}</span><span class="pill">${state.ch.str}</span><h1>${state.ch.title}</h1><div class="question">${state.ch.q}</div>`;document.getElementById('progressDots').innerHTML=all.map((x,i)=>`<div class="stepdot ${i<=state.stage?'on':''}"></div>`).join('');document.getElementById('stageNumber').textContent=`STAGE ${state.stage+1} OF ${all.length}`;document.getElementById('stageName').textContent=st.name;document.getElementById('stageQuestion').textContent=st.q;document.getElementById('stageSetup').textContent=st.setup;document.getElementById('stagePlay').textContent=st.play;document.getElementById('stageScore').textContent=st.score;document.getElementById('stageLook').textContent=st.look;document.getElementById('stageAdapt').textContent=st.adapt;document.getElementById('nextBtn').textContent=state.stage===all.length-1?'Finish Challenge →':'Next Stage →'}
+function nextStage(){if(state.stage<5){state.stage++;renderStage()}else{document.getElementById('lens').innerHTML=`<p>${state.ch.q}</p><ul><li>Did players find their own solutions?</li><li>Did the scoring make the game problem matter?</li><li>Did players adapt when the opponent changed?</li><li>Could you leave the court for 2–3 minutes and have the Challenge keep working?</li></ul>`;document.getElementById('why').innerHTML=`<span class="pill">WHY THIS WORKS</span><p>${state.ch.summary}</p><p>The progression moves from intention and exploration to interaction, adaptation and transfer. The coach changes the environment rather than prescribing the technical answer.</p>`;show('s6')}}
+function prevStage(){if(state.stage>0){state.stage--;renderStage()}else show('s3')}
 function setupRatings(){for(let i=1;i<=7;i++){let d=document.getElementById('r'+i);d.innerHTML=[1,2,3,4,5].map(v=>`<button onclick="rate(${i},${v})">${v}</button>`).join('')}}
 function rate(i,v){state.ratings[i]=v;document.querySelectorAll('#r'+i+' button').forEach((b,j)=>b.classList.toggle('sel',j===v-1))}
-function saveFeedback(){let data={date:new Date().toISOString(),testerName:state.testerName,challenge:state.ch.title,gameSituation:state.sit.name,strategy:state.str,setup:state.setup,stagesCompleted:state.stage+1,reuse:reuse.value,ratings:state.ratings,bestStage:bestStage.value,worked:worked.value,change:change.value,recommend:rec.value};let all=JSON.parse(localStorage.getItem('ti_feedback')||'[]');all.push(data);localStorage.setItem('ti_feedback',JSON.stringify(all));saved.style.display='block'}
-function startOver(){state={sit:null,str:null,ch:null,setup:null,stage:0,ratings:{},testerName:localStorage.getItem('ti_tester_name')||''};saved.style.display='none';render();show('s1')}
+function saveFeedback(){let data={date:new Date().toISOString(),testerName:state.testerName,challenge:state.ch.title,gameSituation:state.sit.name,strategy:state.str,setup:state.setup,stagesCompleted:state.stage+1,reuse:document.getElementById('reuse').value,ratings:state.ratings,bestStage:document.getElementById('bestStage').value,worked:document.getElementById('worked').value,change:document.getElementById('change').value,recommend:document.getElementById('rec').value};let all=JSON.parse(localStorage.getItem('ti_feedback')||'[]');all.push(data);localStorage.setItem('ti_feedback',JSON.stringify(all));document.getElementById('saved').style.display='block'}
+function startOver(){state={sit:null,str:null,ch:null,setup:null,stage:0,ratings:{},testerName:localStorage.getItem('ti_tester_name')||''};document.getElementById('saved').style.display='none';render();show('s1')}
 const situationsEl=document.getElementById('situations'),strategiesEl=document.getElementById('strategies');render();setupRatings();
+
+window.addEventListener('error', function(e){
+  const box=document.getElementById('recommendation');
+  if(box && !box.innerHTML.trim()){
+    box.innerHTML='<div class="panel"><b>Something went wrong loading this step.</b><p class="muted small">Please refresh the page and try again. If it continues, send a screenshot to the Tennis Intelligence team.</p></div>';
+  }
+});
+
 </script>
 </body>
 </html>

@@ -1,159 +1,154 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#111827">
-<title>Tennis Intelligence — V1</title>
+<title>Tennis Intelligence — V2 Coach Test</title>
 <style>
-:root{--bg:#f5f7fa;--card:#fff;--ink:#172033;--muted:#667085;--line:#e4e7ec;--accent:#111827;--soft:#eef2f6;--good:#18794e;--warn:#9a6700}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink)}
-header{background:#111827;color:#fff;padding:22px 20px;position:sticky;top:0;z-index:10}header .brand{max-width:920px;margin:auto;font-weight:750;letter-spacing:.2px}
-main{max-width:920px;margin:0 auto;padding:22px 16px 60px}.step{display:none}.step.active{display:block}
-h1{font-size:30px;line-height:1.1;margin:8px 0 10px}h2{font-size:22px;margin:8px 0}.sub{color:var(--muted);margin:0 0 22px;line-height:1.45}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px;text-align:left;cursor:pointer;transition:.15s}.card:hover{transform:translateY(-1px);border-color:#aab2bf}.card.selected{border:2px solid var(--accent);padding:16px;background:#f8fafc}.card strong{display:block;font-size:16px}.card small{display:block;color:var(--muted);margin-top:6px;line-height:1.35}
-.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:14px 0}.pill{display:inline-block;background:var(--soft);padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700;margin:0 5px 6px 0}.question{font-size:20px;font-weight:700;line-height:1.35;margin:12px 0}
-button{border:0;border-radius:11px;padding:12px 16px;font-weight:700;cursor:pointer;background:var(--accent);color:#fff}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}.danger{background:#fff;color:#a33;border:1px solid #e7caca}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-label{font-weight:700;font-size:14px;display:block;margin:14px 0 7px}input,select,textarea{width:100%;padding:12px;border:1px solid #cfd5dd;border-radius:10px;background:#fff;font:inherit}textarea{min-height:90px}
+:root{--ink:#172033;--muted:#667085;--bg:#f5f7fa;--card:#fff;--line:#e1e5ea;--dark:#111827;--soft:#eef2f6}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{background:var(--dark);color:#fff;padding:18px 18px;position:sticky;top:0;z-index:20}.bar{max-width:900px;margin:auto;font-weight:800}
+main{max-width:900px;margin:auto;padding:22px 16px 60px}.screen{display:none}.screen.active{display:block}
+h1{font-size:30px;line-height:1.12;margin:8px 0 10px}h2{margin:5px 0 8px;font-size:22px}h3{margin:5px 0 8px}.sub{color:var(--muted);line-height:1.45;margin:0 0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:17px;cursor:pointer}.card:hover{border-color:#98a2b3}.card strong{display:block}.card small{display:block;color:var(--muted);margin-top:5px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:19px;margin:13px 0}.hero{border:2px solid var(--dark)}.pill{display:inline-block;background:var(--soft);padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;margin:0 5px 6px 0}
+.question{font-size:20px;font-weight:750;line-height:1.35}.muted{color:var(--muted)}.notice{background:#f8fafc;border-left:4px solid var(--dark);padding:12px 14px;border-radius:8px;line-height:1.5}
+button{border:0;border-radius:11px;padding:12px 16px;background:var(--dark);color:#fff;font-weight:750;cursor:pointer}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line)}.back{background:transparent;color:var(--muted);padding:6px 0}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+label{display:block;font-size:14px;font-weight:750;margin:13px 0 7px}input,select,textarea{width:100%;border:1px solid #cfd5dd;border-radius:10px;padding:12px;font:inherit;background:#fff}textarea{min-height:90px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:620px){.two{grid-template-columns:1fr}}
-.scoregrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.scorebox{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:16px}.score{font-size:36px;font-weight:800;margin:8px 0}.scorebuttons{display:flex;gap:8px}.scorebuttons button{flex:1}
-.notice{padding:12px 14px;background:#f8fafc;border-left:4px solid #111827;border-radius:8px;line-height:1.45}.hidden{display:none!important}.back{background:transparent;color:var(--muted);padding:8px 0}.kpi{font-size:14px;color:var(--muted)}.recommend{border:2px solid #111827}.rating{display:flex;gap:7px;flex-wrap:wrap}.rating button{min-width:42px;background:#fff;color:var(--ink);border:1px solid var(--line)}.rating button.selected{background:#111827;color:#fff}
-ul{padding-left:20px;line-height:1.55}.mini{font-size:13px;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:15px 0}.stepdot{height:7px;border-radius:10px;background:#d0d5dd}.stepdot.on{background:#111827}.stageTitle{font-size:14px;color:var(--muted);font-weight:750}
+.scoregrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}.scorebox{background:#f8fafc;border:1px solid var(--line);border-radius:14px;padding:15px}.big{font-size:34px;font-weight:850}.rating{display:flex;gap:7px;flex-wrap:wrap}.rating button{background:#fff;color:var(--ink);border:1px solid var(--line);min-width:42px}.rating button.sel{background:#111827;color:#fff}
+ul{line-height:1.55}.small{font-size:13px}.center{text-align:center}
 </style>
 </head>
 <body>
-<header><div class="brand">Tennis Intelligence <span style="opacity:.55">V1 Test App</span></div></header>
+<header><div class="bar">Tennis Intelligence <span style="opacity:.55">V2 Coach Test</span></div></header>
 <main>
-<section id="gate" class="step active">
-<h1>Welcome to Tennis Intelligence</h1>
-<p class="sub">V1 Coach Test — authorised testing version.</p>
+
+<section id="gate" class="screen active">
+<h1>Welcome to Tennis Intelligence</h1><p class="sub">V2 Coach Test — authorised testing version.</p>
 <div class="panel">
-<p>Please enter your name and tester code to begin.</p>
+<p>Enter your name and tester code to begin.</p>
 <label>Your name</label><input id="testerName" autocomplete="name" placeholder="e.g. Alex Smith">
 <label>Tester code</label><input id="testerCode" autocomplete="off" placeholder="Enter tester code">
-<div class="actions"><button onclick="enterTest()">Enter the Test</button></div>
-<div id="gateError" class="mini" style="color:#a33;margin-top:10px"></div>
+<div class="actions"><button onclick="enterTest()">Enter the Test</button></div><p id="gateError" class="small" style="color:#a33"></p>
 </div>
 <div class="notice">Please do not share, reproduce or distribute the Challenges or app content without permission.</div>
 </section>
 
-<section id="s1" class="step active">
-<h1>What are you working on today?</h1><p class="sub">Choose the game situation. The format is already built in.</p>
-<div id="situations" class="grid"></div>
+<section id="s1" class="screen">
+<h1>What are you working on today?</h1><p class="sub">Choose the game situation. The format is already built in.</p><div id="situations" class="grid"></div>
 </section>
 
-<section id="s2" class="step">
-<button class="back" onclick="go(1)">← Back</button>
-<h1>What is the intention?</h1><p class="sub">Choose what you want the player to achieve.</p>
-<div id="strategies" class="grid"></div>
+<section id="s2" class="screen">
+<button class="back" onclick="show('s1')">← Back</button>
+<h1>What do you want the player to achieve?</h1><p class="sub">Choose the intention for this Challenge.</p><div id="strategies" class="grid"></div>
 </section>
 
-<section id="s3" class="step">
-<button class="back" onclick="go(2)">← Back</button>
-<h1>Choose a Challenge</h1><div id="challengeList"></div>
+<section id="s3" class="screen">
+<button class="back" onclick="show('s2')">← Back</button>
+<h1>Choose a Challenge</h1><p class="sub">A Challenge gives you a progression, not just one activity.</p><div id="challengeList"></div>
 </section>
 
-<section id="s4" class="step">
-<button class="back" onclick="go(3)">← Back</button>
-<h1>Set up my session</h1><p class="sub">The app knows whether this is singles or doubles.</p>
+<section id="s4" class="screen">
+<button class="back" onclick="show('s3')">← Back</button>
+<div id="setupHead"></div>
 <div class="panel">
-<div class="two"><div><label>Players</label><input id="players" type="number" min="2" value="4"></div><div><label>Courts</label><input id="courts" type="number" min="1" value="1"></div></div>
+<div class="two"><div><label>Players</label><input id="players" type="number" min="2" value="5"></div><div><label>Courts</label><input id="courts" type="number" min="1" value="2"></div></div>
 <div class="actions"><button onclick="recommend()">Recommend setup</button></div>
-</div><div id="recommendation"></div>
+</div>
+<div id="recommendation"></div>
 </section>
 
-<section id="s5" class="step">
-<button class="back" onclick="go(4)">← Back</button><div id="challengeHeader"></div>
-<div class="panel"><span class="pill">Warm-up</span><div id="warmup"></div></div>
-<div class="panel"><span class="pill">Challenge</span><div id="liveInstruction"></div><div id="scoreUI"></div></div>
-<div class="panel"><span class="pill">Adapt</span><div id="adapt"></div></div>
-<div class="panel"><span class="pill">Live Play</span><div id="transfer"></div></div>
-<div class="actions"><button onclick="go(6)">Finish & Give Feedback</button></div>
+<section id="s5" class="screen">
+<button class="back" onclick="show('s4')">← Back</button>
+<div id="liveHead"></div>
+<div class="steps" id="progressDots"></div>
+<div class="panel hero"><div class="stageTitle" id="stageNumber"></div><h2 id="stageName"></h2><div class="question" id="stageQuestion"></div></div>
+<div class="panel"><span class="pill">Set-up</span><div id="stageSetup"></div></div>
+<div class="panel"><span class="pill">Play</span><div id="stagePlay"></div></div>
+<div class="panel"><span class="pill">Scoring</span><div id="stageScore"></div></div>
+<div class="panel"><span class="pill">Look for</span><div id="stageLook"></div></div>
+<div class="panel"><span class="pill">Ready for more?</span><div id="stageAdapt"></div></div>
+<div class="actions"><button class="secondary" onclick="prevStage()">← Previous</button><button onclick="nextStage()" id="nextBtn">Next Stage →</button></div>
 </section>
 
-<section id="s6" class="step">
-<button class="back" onclick="go(5)">← Back</button>
-<h1>Coach Lens</h1><div id="lens" class="panel"></div>
-<div class="panel"><span class="pill">Why This Works</span><div id="why"></div></div>
-<div class="actions"><button onclick="go(7)">Give Feedback</button></div>
+<section id="s6" class="screen">
+<button class="back" onclick="show('s5')">← Back</button>
+<h1>Coach Lens</h1>
+<div id="lens" class="panel"></div>
+<div id="why" class="panel"></div>
+<div class="actions"><button onclick="show('s7')">Give Feedback</button></div>
 </section>
 
-<section id="s7" class="step">
-<h1>Quick Feedback</h1><p class="sub">This is designed for testing with coaches. Your feedback will shape V1.</p>
+<section id="s7" class="screen">
+<h1>Quick Feedback</h1><p class="sub">Your feedback will shape the next version.</p>
 <div class="panel">
 <label>Would you use this Challenge again?</label><select id="reuse"><option>Yes</option><option>Maybe</option><option>No</option></select>
 <label>Player understanding (1–5)</label><div class="rating" id="r1"></div>
-<label>Scoring worked (1–5)</label><div class="rating" id="r2"></div>
-<label>Rotation worked (1–5)</label><div class="rating" id="r3"></div>
-<label>Game problem was clear (1–5)</label><div class="rating" id="r4"></div>
-<label>Coach workload (1–5, 5 = very easy)</label><div class="rating" id="r5"></div>
-<label>CLA integrity (1–5)</label><div class="rating" id="r6"></div>
+<label>Progression was useful (1–5)</label><div class="rating" id="r2"></div>
+<label>Scoring worked (1–5)</label><div class="rating" id="r3"></div>
+<label>Rotation worked (1–5)</label><div class="rating" id="r4"></div>
+<label>Game problem was clear (1–5)</label><div class="rating" id="r5"></div>
+<label>Coach workload (1–5, 5 = very easy)</label><div class="rating" id="r6"></div>
+<label>CLA integrity (1–5)</label><div class="rating" id="r7"></div>
+<label>Which stage was most useful?</label><input id="bestStage" placeholder="e.g. Adapt">
 <label>What worked?</label><textarea id="worked"></textarea>
 <label>What would you change?</label><textarea id="change"></textarea>
-<label>Would you recommend this to another coach?</label><select id="recommend"><option>Yes</option><option>Maybe</option><option>No</option></select>
+<label>Would you recommend this to another coach?</label><select id="rec"><option>Yes</option><option>Maybe</option><option>No</option></select>
 <div class="actions"><button onclick="saveFeedback()">Save feedback</button><button class="secondary" onclick="startOver()">Start another session</button></div>
-</div><div id="saved" class="notice hidden">Feedback saved on this device.</div>
+</div><div id="saved" class="notice" style="display:none">Feedback saved on this device.</div>
 </section>
+
 </main>
 <script>
-const S=[
+const situations=[
 {id:'serve',name:'Serving',format:'Singles'},{id:'return',name:'Returning',format:'Singles'},{id:'rally',name:'Baseline Rally',format:'Singles'},
 {id:'approach',name:'Approaching the Net',format:'Singles'},{id:'passing',name:'Passing the Net Player',format:'Singles'},
 {id:'dserve',name:'Doubles Serving',format:'Doubles'},{id:'dreturn',name:'Doubles Returning',format:'Doubles'}];
-const STR=['Be Consistent','Play Deep','Move the Opponent','Use My Strength','Exploit a Weakness'];
+const strategies=['Be Consistent','Play Deep','Move the Opponent','Use My Strength','Exploit a Weakness'];
+
+function stagesFor(c){
+const base=[
+{name:'CONNECT',q:c.connectQ,setup:c.connectSetup,play:c.connectPlay,score:c.connectScore,look:c.connectLook,adapt:'When this feels easy, move to Explore.'},
+{name:'EXPLORE',q:c.exploreQ,setup:c.exploreSetup,play:c.explorePlay,score:c.exploreScore,look:c.exploreLook,adapt:'Let the player try another solution. If they are successful, move to Develop.'},
+{name:'DEVELOP',q:c.developQ,setup:c.developSetup,play:c.developPlay,score:c.developScore,look:c.developLook,adapt:'Now increase the opponent’s influence on the problem.'},
+{name:'ADAPT',q:c.adaptQ,setup:c.adaptSetup,play:c.adaptPlay,score:c.adaptScore,look:c.adaptLook,adapt:'Change the opponent’s behaviour again if the solution becomes predictable.'},
+{name:'LIVE PLAY',q:c.liveQ,setup:'Play normal points with the same intention.',play:c.livePlay,score:'Normal tennis scoring unless the coach wants to keep the Challenge score for observation.',look:c.liveLook,adapt:'Move to Transfer when the player can use the intention without the Challenge being imposed.'},
+{name:'TRANSFER',q:c.transferQ,setup:'Return to normal tennis.',play:c.transferPlay,score:'Normal tennis scoring.',look:c.transferLook,adapt:'Finish by asking the player what they can take into a match.'}
+];return base}
+
 const C=[
-{id:1,s:'serve',str:'Be Consistent',title:'START THE POINT',phase:'Neutral',q:'Can you find a serve you can rely on?',warm:'ONE SERVE',challenge:'Play first to 7, with one serve only.',score:'Normal tennis scoring. One serve only. Explore speed, spin, placement, type and starting position.',adapt:'Vary the returner: deeper, closer, attacking or protecting a side.',transfer:'Play a normal service game with two serves and see what transfers.',lens:'Look for reliable solutions, variety, adaptation and sensible risk management.',why:'Removing the second serve changes the problem without prescribing a technique. The player must discover a serve they can rely on.'},
-{id:2,s:'serve',str:'Move the Opponent',title:'MOVE THEM',phase:'Attack',q:'Can you move them with your serve and make the next ball easier?',warm:'MAKE THEM MOVE',challenge:'Play live service points, first to 7.',score:'1 point for a normal win. 2 points if the serve moves the returner or makes them change their stroke and the server wins the point.',adapt:'Change the returner’s starting position, anticipation or return position.',transfer:'Play normal points and notice what happens after you move them.',lens:'Ask: “What happened after you moved them?” Look for players using the next ball rather than chasing a pre-set target.',why:'The bonus rewards an outcome — moving the opponent and benefiting from it — rather than prescribing where to serve.'},
-{id:3,s:'serve',str:'Use My Strength',title:'BRING OUT YOUR BEST',phase:'Attack',q:'Can you use your serve to create a chance to play your best shot?',warm:'GET YOUR BEST SHOT IN THE POINT',challenge:'Play live service points, first to 7.',score:'1 normal win. 2 if the player creates a chance to play their best shot, uses it and wins. If it is not there, play the ball that is there.',adapt:'The returner knows what the server wants and tries to take it away.',transfer:'Play normal service points and look for natural chances to bring out the best shot.',lens:'Ask: “How can you get your best shot into the point?” Watch whether players adapt when the opponent takes it away.',why:'The player starts with an intention and must discover how the serve can create an opportunity for their own strength.'},
-{id:4,s:'return',str:'Be Consistent',title:'STAY IN THE POINT',phase:'Neutral',q:'Can you get the return in and stay in the point?',warm:'STAY IN',challenge:'Play live return points, one serve.',score:'Normal tennis scoring. If the return is missed, the server wins the point.',adapt:'Change server speed, placement or behaviour naturally through live play.',transfer:'Play normal return games and keep the same intention.',lens:'Watch the quality of the return decision and what gives the player the best chance of staying in the point. Recovery is observed, not scored.',why:'The constraint makes the return meaningful as the start of the point without turning recovery or technique into a checklist.'},
-{id:5,s:'return',str:'Play Deep',title:'PUSH THEM BACK',phase:'Neutral → Attack',q:'Can you keep them behind the baseline?',warm:'PUSH THEM BACK',challenge:'The server tries to get inside the baseline; the returner tries to keep the server behind it.',score:'Returner wins while server stays behind baseline = 2. Returner wins after server gets inside = 1. Server gets inside and wins = 2.',adapt:'Let the server change starting position or try to get forward earlier.',transfer:'Play normal return points and notice when depth changes the opponent’s options.',lens:'Ask: “What helps you keep them back?” Do not tell players how to hit deep.',why:'The scoring makes court position consequential. Players discover ways to influence depth rather than being told a stroke solution.'},
-{id:6,s:'return',str:'Use My Strength',title:'BRING OUT YOUR BEST',phase:'Attack',q:'Can you use your return to create a chance to play your best shot?',warm:'GET YOUR BEST SHOT IN THE POINT',challenge:'Play live return points, first to 7.',score:'1 normal win. 2 if the player creates a chance to play their best shot, uses it and wins. 0 if they force it unsuccessfully.',adapt:'The server knows what the returner wants and tries to take it away.',transfer:'Play normal return points and look for natural opportunities.',lens:'Ask: “How can you get your best shot into the point?” Watch adaptation rather than forcing.',why:'The intention is clear, but the player must solve the serve-return problem to create their opportunity.'},
-{id:7,s:'rally',str:'Be Consistent',title:'STAY IN THE RALLY',phase:'Neutral',q:'Can you stay in the rally and make them play one more ball?',warm:'ONE MORE BALL',challenge:'Live baseline points. The first 4 balls must be played before the point can be won.',score:'Miss before ball 4 = opponent gets 2. After ball 4 = normal scoring.',adapt:'Allow the opponent to change tempo, position or behaviour while keeping the same intention.',transfer:'Play normal baseline points and look for ways to stay effective under pressure.',lens:'Ask: “What helps you stay in the rally?”',why:'The four-ball condition shifts attention toward staying in the exchange without prescribing height, spin, speed or direction.'},
-{id:8,s:'rally',str:'Move the Opponent',title:'MOVE THEM',phase:'Neutral → Attack',q:'Can you move them and open up the court?',warm:'MAKE THEM MOVE',challenge:'Live baseline points, first to 7.',score:'1 normal win. 2 if the player moves the opponent, opens up the court and wins.',adapt:'The opponent recovers quicker, changes position or anticipates.',transfer:'Play normal baseline points and notice how movement creates space.',lens:'Ask: “What helped you open up the court?”',why:'The bonus rewards the game outcome — movement creating space — rather than prescribing direction.'},
-{id:9,s:'rally',str:'Play Deep',title:'PLAY DEEP',phase:'Neutral',q:'Can you keep them behind the baseline?',warm:'PUSH THEM BACK',challenge:'Live baseline points.',score:'1 normal win. 2 if the player wins while keeping the opponent behind the baseline.',adapt:'The opponent changes starting position or looks to move forward earlier.',transfer:'Play normal points and notice how depth affects their options.',lens:'Ask: “What helps you keep them behind the baseline?”',why:'The scoring makes depth a useful game objective while leaving the player to discover how to achieve it.'}
+{id:1,s:'serve',str:'Be Consistent',title:'START THE POINT',phase:'Neutral',q:'Can you find a serve you can rely on?',summary:'Build a reliable first action without prescribing a serve.',connectQ:'Can you find one serve you can rely on?',connectSetup:'Server has one serve. Receiver plays a normal return.',connectPlay:'Play short live points. The server explores what they can reliably get in.',connectScore:'Normal tennis scoring, one serve only.',connectLook:'Reliability and sensible risk management.',exploreQ:'What changes help you make the serve more reliable?',exploreSetup:'Keep one serve. Allow the player to explore speed, spin, placement, type and starting position.',explorePlay:'Play first to 7. Let the player discover a reliable option.',exploreScore:'Normal scoring.',exploreLook:'Different solutions, not a single prescribed technique.',developQ:'Can you keep the serve reliable when the returner changes?',developSetup:'Returner changes starting position or behaviour.',developPlay:'Live points, first to 7.',developScore:'Normal scoring.',developLook:'Adaptation without losing reliability.',adaptQ:'Can you adapt when the returner takes away your first option?',adaptSetup:'Returner deliberately protects or attacks a preferred option.',adaptPlay:'Live points. Player must find another reliable solution.',adaptScore:'Normal scoring.',adaptLook:'Flexible problem solving and risk management.',liveQ:'Can you use your reliable serve in normal tennis?',livePlay:'Normal service games with two serves.',liveLook:'Whether the solution transfers without the constraint.',transferQ:'What serve can you rely on when the score matters?',transferPlay:'Play normal points and discuss what the player would trust at 30–30 or break point.',transferLook:'Player identifies a useful, self-generated option.'},
+{id:2,s:'serve',str:'Move the Opponent',title:'MOVE THEM',phase:'Attack',q:'Can you move them with your serve and make the next ball easier?',summary:'Use the serve to influence the returner and the next ball.',connectQ:'Can you make the returner move?',connectSetup:'Live service points. Returner starts in a normal position.',connectPlay:'Serve and notice what the returner does.',connectScore:'1 normal win; 2 if the serve moves the returner or changes their stroke and the server wins.',connectLook:'Whether the serve creates a useful change in the return.',exploreQ:'What different serves can move them?',exploreSetup:'Keep the live point. Do not prescribe a direction or technical solution.',explorePlay:'First to 7. Explore different ways to create movement.',exploreScore:'1 normal win; 2 for move/change + win.',exploreLook:'Player discovers more than one solution.',developQ:'Can you use what happens after you move them?',developSetup:'Live serve → return → next ball.',developPlay:'Server uses the return that appears rather than chasing a pre-set target.',developScore:'1 normal win; 2 for move/change + win.',developLook:'Connection between the serve and the next action.',adaptQ:'Can you move them when they know what you want?',adaptSetup:'Returner changes starting position, anticipation or return position.',adaptPlay:'Live points. Server adapts.',adaptScore:'Same Challenge scoring.',adaptLook:'Adaptation when the first solution is taken away.',liveQ:'Can you use this in normal service games?',livePlay:'Normal points. Keep the intention.',liveLook:'Player uses the serve to influence the point naturally.',transferQ:'When could moving them make your next ball easier?',transferPlay:'Normal points and player reflection after a few games.',transferLook:'Player can recognise the opportunity without a prompt.'},
+{id:3,s:'serve',str:'Use My Strength',title:'BRING OUT YOUR BEST',phase:'Attack',q:'Can you use your serve to create a chance to play your best shot?',summary:'Connect the serve to the player’s own strength.',connectQ:'What is the shot you most want to play when you are playing your best tennis?',connectSetup:'Player identifies one best shot. Play live service points.',connectPlay:'Look for natural chances to bring that shot into the point.',connectScore:'1 normal win; 2 if the player creates the chance, uses the best shot and wins.',connectLook:'Player recognises their own opportunity.',exploreQ:'How can your serve help create that chance?',exploreSetup:'Live points. Do not prescribe where or how to serve.',explorePlay:'First to 7. Try different solutions.',exploreScore:'1 normal win; 2 for chance + best shot + win.',exploreLook:'Variety and player ownership.',developQ:'Can you build the point around the chance rather than force it?',developSetup:'Returner plays normally and can take away the preferred option.',developPlay:'Play live points and use the ball that is there.',developScore:'1 normal win; 2 for chance + best shot + win.',developLook:'Patience and recognition.',adaptQ:'Can you find another way when the returner takes your best option away?',adaptSetup:'Returner knows what the server wants and actively tries to remove it.',adaptPlay:'Live points. Player adapts rather than forcing.',adaptScore:'1 normal win; 2 for successful best-shot opportunity.',adaptLook:'Flexibility and decision making.',liveQ:'Can you bring out your best shot in normal tennis?',livePlay:'Normal service games.',liveLook:'The strength appears naturally rather than being forced.',transferQ:'How can you create this chance in a match?',transferPlay:'Normal points; player explains the opportunity after it occurs.',transferLook:'Player can recognise and create opportunities independently.'},
+{id:4,s:'return',str:'Be Consistent',title:'STAY IN THE POINT',phase:'Neutral',q:'Can you get the return in and stay in the point?',summary:'Make the return a reliable start to the point.',connectQ:'Can you get the return in?',connectSetup:'One serve. Receiver plays live points.',connectPlay:'Return and stay engaged in the point.',connectScore:'Normal tennis scoring. Missed return = server wins.',connectLook:'Reliable decisions, not a technical checklist.',exploreQ:'What return gives you the best chance of staying in?',exploreSetup:'Change the server’s speed or placement naturally.',explorePlay:'Live return points.',exploreScore:'Normal scoring.',exploreLook:'Player discovers a reliable return option.',developQ:'Can you stay in when the serve changes?',developSetup:'Server varies speed, placement and behaviour.',developPlay:'Live points.',developScore:'Normal scoring.',developLook:'Adaptation while remaining in the point.',adaptQ:'Can you stay in when the server attacks your preferred return?',adaptSetup:'Server deliberately changes the problem.',adaptPlay:'Live points.',adaptScore:'Normal scoring.',adaptLook:'Flexible return choices.',liveQ:'Can you use this in normal return games?',livePlay:'Normal return games.',liveLook:'Transfer to normal tennis.',transferQ:'What return gives you confidence to start the point?',transferPlay:'Normal games and reflection.',transferLook:'A self-selected reliable option.'},
+{id:5,s:'return',str:'Play Deep',title:'PUSH THEM BACK',phase:'Neutral → Attack',q:'Can you keep them behind the baseline?',summary:'Make court position matter without telling the player how to hit.',connectQ:'Can you keep the server behind the baseline?',connectSetup:'Server tries to get inside the baseline. Returner tries to keep them behind.',connectPlay:'Live return points.',connectScore:'Returner wins while server stays behind = 2; returner wins after server gets inside = 1; server gets inside and wins = 2.',connectLook:'How the player influences the opponent’s court position.',exploreQ:'What helps you keep them back?',exploreSetup:'Keep the same live game. No instruction about height, spin, speed or direction.',explorePlay:'Play first to 7.',exploreScore:'Use the same court-position scoring.',exploreLook:'Different player-generated solutions.',developQ:'Can you keep them back when they try to move forward earlier?',developSetup:'Server changes starting position or comes forward earlier.',developPlay:'Live points.',developScore:'Same court-position scoring.',developLook:'Whether the player adapts to the opponent’s intention.',adaptQ:'Can you keep them back when they know what you want?',adaptSetup:'Server anticipates and protects their forward movement.',adaptPlay:'Live points.',adaptScore:'Same scoring.',adaptLook:'Adaptation, not a fixed stroke recipe.',liveQ:'Can you use depth to influence normal points?',livePlay:'Normal return points.',liveLook:'Whether the player recognises when keeping the opponent back is useful.',transferQ:'When is keeping them behind the baseline most valuable?',transferPlay:'Normal games and reflection.',transferLook:'Player recognises the tactical opportunity.'},
+{id:6,s:'return',str:'Use My Strength',title:'BRING OUT YOUR BEST',phase:'Attack',q:'Can you use your return to create a chance to play your best shot?',summary:'Use the return to create an opportunity for the player’s strength.',connectQ:'What is your best shot when you are playing your best tennis?',connectSetup:'Identify one best shot. Play live return points.',connectPlay:'Look for a chance to use it.',connectScore:'1 normal win; 2 if the player creates the chance, uses the best shot and wins; 0 if they force it unsuccessfully.',connectLook:'Recognition rather than forcing.',exploreQ:'How can your return help create that chance?',exploreSetup:'Live points; server behaves normally.',explorePlay:'First to 7.',exploreScore:'1 normal win; 2 for chance + best shot + win; 0 for a forced unsuccessful attempt.',exploreLook:'Player ownership.',developQ:'Can you use the return and the next ball together?',developSetup:'Server knows what the returner wants and can take it away.',developPlay:'Live points.',developScore:'Same Challenge scoring.',developLook:'Connection between return and next action.',adaptQ:'Can you find another way when the server removes your preferred option?',adaptSetup:'Server deliberately takes away the preferred return outcome.',adaptPlay:'Live points.',adaptScore:'Same Challenge scoring.',adaptLook:'Adaptation and patience.',liveQ:'Can you bring out your best shot in normal return games?',livePlay:'Normal return games.',liveLook:'Natural transfer.',transferQ:'How can you create this opportunity in a match?',transferPlay:'Normal games.',transferLook:'Player can recognise the opportunity.'},
+{id:7,s:'rally',str:'Be Consistent',title:'STAY IN THE RALLY',phase:'Neutral',q:'Can you stay in the rally and make them play one more ball?',summary:'Build rally reliability without prescribing a stroke solution.',connectQ:'Can you make them play one more ball?',connectSetup:'Live baseline points.',connectPlay:'The first 4 balls must be played before the point can be won.',connectScore:'Miss before ball 4 = opponent gets 2. After ball 4 = normal scoring.',connectLook:'What helps the player stay in the rally.',exploreQ:'What helps you stay in when the rally changes?',exploreSetup:'Keep the four-ball condition. Allow tempo and position to vary.',explorePlay:'Live baseline points.',exploreScore:'Same four-ball scoring.',exploreLook:'Self-generated consistency solutions.',developQ:'Can you stay in when the opponent changes the rally?',developSetup:'Opponent changes tempo, position or behaviour.',developPlay:'Live points.',developScore:'Same scoring.',developLook:'Adaptation.',adaptQ:'Can you stay in when the rally becomes uncomfortable?',adaptSetup:'Opponent deliberately increases pressure.',adaptPlay:'Live points.',adaptScore:'Same scoring.',adaptLook:'Decision making under changing information.',liveQ:'Can you stay in normal rallies?',livePlay:'Normal baseline points.',liveLook:'Transfer.',transferQ:'What helps you stay in when the score is tight?',transferPlay:'Normal games.',transferLook:'Player identifies a reliable rally solution.'},
+{id:8,s:'rally',str:'Move the Opponent',title:'MOVE THEM',phase:'Neutral → Attack',q:'Can you move them and open up the court?',summary:'Use movement to create space rather than prescribing direction.',connectQ:'Can you make them move?',connectSetup:'Live baseline points.',connectPlay:'Notice what happens when the opponent moves.',connectScore:'1 normal win; 2 if the player moves the opponent, opens the court and wins.',connectLook:'Movement creating useful space.',exploreQ:'What different ways can you open the court?',exploreSetup:'Live baseline points. No prescribed direction.',explorePlay:'First to 7.',exploreScore:'1 normal win; 2 for move + open court + win.',exploreLook:'Multiple solutions.',developQ:'Can you use the space you create?',developSetup:'Opponent must recover and play the next ball.',developPlay:'Move them, recognise the next ball, use the space.',developScore:'Same Challenge scoring.',developLook:'Connection between movement and next action.',adaptQ:'Can you open the court when they recover quicker or anticipate?',adaptSetup:'Opponent changes position and recovery.',adaptPlay:'Live points.',adaptScore:'Same scoring.',adaptLook:'Adaptation.',liveQ:'Can you move them naturally in normal rallies?',livePlay:'Normal baseline points.',liveLook:'Natural tactical use.',transferQ:'When is opening the court most useful in a match?',transferPlay:'Normal games.',transferLook:'Player recognises the opportunity.'},
+{id:9,s:'rally',str:'Play Deep',title:'PLAY DEEP',phase:'Neutral',q:'Can you keep them behind the baseline?',summary:'Make depth a meaningful game problem without prescribing technique.',connectQ:'Can you keep them behind the baseline?',connectSetup:'Live baseline points.',connectPlay:'Play for the outcome.',connectScore:'1 normal win; 2 if the player wins while keeping the opponent behind the baseline.',connectLook:'How the player influences court position.',exploreQ:'What helps you keep them back?',exploreSetup:'No instruction about height, spin, speed or direction.',explorePlay:'First to 7.',exploreScore:'1 normal win; 2 for win while opponent stays behind.',exploreLook:'Different solutions.',developQ:'Can you keep them back when they try to move forward?',developSetup:'Opponent changes starting position or looks to move forward earlier.',developPlay:'Live points.',developScore:'Same depth outcome scoring.',developLook:'Adaptation.',adaptQ:'Can you keep them behind when they know what you want?',adaptSetup:'Opponent anticipates and changes position.',adaptPlay:'Live points.',adaptScore:'Same scoring.',adaptLook:'Flexible solutions.',liveQ:'Can you use depth naturally in normal tennis?',livePlay:'Normal baseline points.',liveLook:'Transfer.',transferQ:'When does keeping them behind the baseline help you most?',transferPlay:'Normal games.',transferLook:'Player can recognise the tactical opportunity.'}
 ];
-let state={sit:null,str:null,ch:null,setup:null,ratings:{},testerName:localStorage.getItem('ti_tester_name')||''};
-function render(){
-document.getElementById('situations').innerHTML=S.map(x=>`<div class="card" onclick="pickSit('${x.id}')"><strong>${x.name}</strong><small>${x.format}</small></div>`).join('');
-document.getElementById('strategies').innerHTML=STR.map(x=>`<div class="card" onclick="pickStr('${x}')"><strong>${x}</strong></div>`).join('');
-}
-function showStep(id){document.querySelectorAll('.step').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0)}
-function go(n){showStep('s'+n)}
-function enterTest(){const name=document.getElementById('testerName').value.trim();const code=document.getElementById('testerCode').value.trim();if(!name){document.getElementById('gateError').textContent='Please enter your name.';return}if(code!=='TI-V1-TEST'){document.getElementById('gateError').textContent='That tester code is not recognised.';return}state.testerName=name;localStorage.setItem('ti_tester_name',name);showStep('s1')}
-function pickSit(id){state.sit=S.find(x=>x.id===id);go(2)}
-function pickStr(x){state.str=x;let cs=C.filter(c=>c.s===state.sit.id&&c.str===x);document.getElementById('challengeList').innerHTML=cs.length?cs.map(c=>`<div class="panel card" onclick="pickChallenge(${c.id})"><span class="pill">${c.phase}</span><span class="pill">${state.sit.format}</span><h2>${c.title}</h2><div class="question">${c.q}</div><div class="mini">Strategy: ${c.str}</div></div>`).join(''):`<div class="panel"><h2>Coming Soon</h2><p>We haven't built a Challenge for this combination yet.</p></div>`;go(3)}
-function pickChallenge(id){state.ch=C.find(c=>c.id===id);go(4)}
-function recommend(){
-let p=+document.getElementById('players').value,c=+document.getElementById('courts').value,fmt=state.sit.format,per=fmt==='Singles'?2:4;
-let active=Math.min(c,Math.floor(p/per)), remainder=p-active*per;
-if(active<1){document.getElementById('recommendation').innerHTML='<div class="panel"><b>Need more players.</b> This format needs at least '+per+' players.</div>';return}
-let base=Math.floor(p/c), extra=p%c, courts=[];for(let i=0;i<c;i++){let n=base+(i<extra?1:0);if(n>0)courts.push(n)}
-let text=courts.map((n,i)=>`<div class="panel ${n>per?'recommend':''}"><b>Court ${i+1}</b><br>${n} players — ${fmt==='Singles'?'full-court singles':'full-court doubles'}. ${n<=per?'Continuous play.':'Score-driven rotation: winner stays only when the Challenge outcome earns the stay-on; otherwise rotate. Players keep score.'}</div>`).join('');
-document.getElementById('recommendation').innerHTML=`<div class="panel recommend"><span class="pill">${fmt}</span><h2>Recommended setup</h2><p><b>${p} players / ${c} court${c>1?'s':''}</b></p><p>PLAY → SCORE → ROTATE → PLAY</p><p class="kpi">Coach observes; players manage the score. Overall time controls the Challenge, not default rotation.</p></div>${text}<div class="actions"><button onclick="startChallenge()">Start Challenge</button></div>`;
-state.setup={players:p,courts:c,format:fmt};
-}
-function startChallenge(){
-let c=state.ch;document.getElementById('challengeHeader').innerHTML=`<span class="pill">${state.sit.name}</span><span class="pill">${state.sit.format}</span><span class="pill">${c.phase}</span><h1>${c.title}</h1><div class="question">${c.q}</div>`;
-document.getElementById('warmup').textContent=c.warm;document.getElementById('liveInstruction').innerHTML=`<p>${c.challenge}</p><div class="notice"><b>Scoring:</b> ${c.score}</div>`;document.getElementById('adapt').textContent=c.adapt;document.getElementById('transfer').textContent=c.transfer;
-document.getElementById('scoreUI').innerHTML=makeScore(c);
-go(5);
-}
-function makeScore(c){
-if(c.id===1||c.id===4)return `<div class="scoregrid"><div class="scorebox"><b>Player A</b><div class="score" id="a">0</div><button onclick="pt('a')">+ Point</button></div><div class="scorebox"><b>Player B</b><div class="score" id="b">0</div><button onclick="pt('b')">+ Point</button></div></div><p class="mini">Prototype scorekeeper — players can also self-score on court.</p>`;
-return `<div class="notice">Use the Challenge scoring above. In the live test, players should self-manage the score so the coach can move between courts.</div>`;
-}
-function pt(x){let e=document.getElementById(x);e.textContent=+e.textContent+1}
-function finishLens(){document.getElementById('lens').innerHTML=`<p>${state.ch.lens}</p><ul><li>Did players find their own solutions?</li><li>Did the scoring make the game problem matter?</li><li>Did players adapt when the opponent changed?</li><li>Could you leave the court for 2–3 minutes and have the Challenge keep working?</li></ul>`;document.getElementById('why').textContent=state.ch.why}
-document.getElementById('s6').addEventListener('click',()=>{});
-const oldGo=go;go=function(n){if(n===6)finishLens();oldGo(n)};
-function setupRatings(){for(let i=1;i<=6;i++){let d=document.getElementById('r'+i);d.innerHTML=[1,2,3,4,5].map(v=>`<button onclick="rate(${i},${v})">${v}</button>`).join('')}}
-function rate(i,v){state.ratings[i]=v;document.querySelectorAll('#r'+i+' button').forEach((b,j)=>b.classList.toggle('selected',j===v-1))}
-function saveFeedback(){
-let data={date:new Date().toISOString(),testerName:state.testerName||document.getElementById('testerName').value.trim(),challenge:state.ch?.title,gameSituation:state.sit?.name,strategy:state.str,setup:state.setup,reuse:document.getElementById('reuse').value,ratings:state.ratings,worked:document.getElementById('worked').value,change:document.getElementById('change').value,recommend:document.getElementById('recommend').value};
-let all=JSON.parse(localStorage.getItem('ti_feedback')||'[]');all.push(data);localStorage.setItem('ti_feedback',JSON.stringify(all));document.getElementById('saved').classList.remove('hidden');
-}
-function startOver(){state={sit:null,str:null,ch:null,setup:null,ratings:{},testerName:localStorage.getItem('ti_tester_name')||''};render();document.getElementById('saved').classList.add('hidden');go(1)}
-render();setupRatings();
+
+let state={sit:null,str:null,ch:null,setup:null,stage:0,ratings:{},testerName:localStorage.getItem('ti_tester_name')||''};
+
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
+function enterTest(){let n=document.getElementById('testerName').value.trim(),code=document.getElementById('testerCode').value.trim();if(!n){gateError.textContent='Please enter your name.';return}if(code!=='TI-V1-TEST'){gateError.textContent='That tester code is not recognised.';return}state.testerName=n;localStorage.setItem('ti_tester_name',n);show('s1')}
+function render(){situationsEl.innerHTML=situations.map(x=>`<div class="card" onclick="pickSit('${x.id}')"><strong>${x.name}</strong><small>${x.format}</small></div>`).join('');strategiesEl.innerHTML=strategies.map(x=>`<div class="card" onclick="pickStr('${x}')"><strong>${x}</strong></div>`).join('')}
+function pickSit(id){state.sit=situations.find(x=>x.id===id);show('s2')}
+function pickStr(str){state.str=str;let cs=C.filter(c=>c.s===state.sit.id&&c.str===str);challengeList.innerHTML=cs.length?cs.map(c=>`<div class="panel card" onclick="pickChallenge(${c.id})"><span class="pill">${c.phase}</span><span class="pill">${state.sit.format}</span><h2>${c.title}</h2><div class="question">${c.q}</div><p class="muted">${c.summary}</p><div class="small">This Challenge has a 6-stage progression.</div></div>`).join(''):`<div class="panel"><h2>Coming Soon</h2><p>We haven't built a Challenge for this combination yet.</p></div>`;show('s3')}
+function pickChallenge(id){state.ch=C.find(c=>c.id===id);setupHead.innerHTML=`<span class="pill">${state.sit.name}</span><span class="pill">${state.sit.format}</span><span class="pill">${state.ch.phase}</span><h1>${state.ch.title}</h1><div class="question">${state.ch.q}</div>`;show('s4')}
+function recommend(){let p=+players.value,c=+courts.value,fmt=state.sit.format,unit=fmt==='Singles'?2:4;if(p<unit){recommendation.innerHTML=`<div class="panel"><b>Need at least ${unit} players for ${fmt.toLowerCase()}.</b></div>`;return}let base=Math.floor(p/c),extra=p%c,courts=[];for(let i=0;i<c;i++){let n=base+(i<extra?1:0);if(n>0)courts.push(n)}let courtText=courts.map((n,i)=>`<div class="panel"><b>Court ${i+1}</b><p>${n} players — full-court ${fmt.toLowerCase()}.</p>${n<=unit?'<p>Continuous play.</p>':'<p><b>Score-driven rotation:</b> PLAY → SCORE → ROTATE → PLAY. Players keep score; use the Challenge outcome to decide stay/rotate.</p>'}</div>`).join('');recommendation.innerHTML=`<div class="panel hero"><span class="pill">${fmt}</span><h2>Recommended setup</h2><p><b>${p} players / ${c} court${c>1?'s':''}</b></p><div class="notice"><b>Challenge scoring</b><br>${state.ch.connectScore}</div><p class="muted">Players manage the score. The coach observes and moves between courts.</p></div>${courtText}<div class="actions"><button onclick="startProgression()">Start Challenge</button></div>`;state.setup={players:p,courts:c,format:fmt}}
+function startProgression(){state.stage=0;renderStage();show('s5')}
+function renderStage(){let st=stagesFor(state.ch)[state.stage],all=stagesFor(state.ch);liveHead.innerHTML=`<span class="pill">${state.sit.name}</span><span class="pill">${state.sit.format}</span><span class="pill">${state.ch.str}</span><h1>${state.ch.title}</h1><div class="question">${state.ch.q}</div>`;progressDots.innerHTML=all.map((x,i)=>`<div class="stepdot ${i<=state.stage?'on':''}"></div>`).join('');stageNumber.textContent=`STAGE ${state.stage+1} OF ${all.length}`;stageName.textContent=st.name;stageQuestion.textContent=st.q;stageSetup.textContent=st.setup;stagePlay.textContent=st.play;stageScore.textContent=st.score;stageLook.textContent=st.look;stageAdapt.textContent=st.adapt;nextBtn.textContent=state.stage===all.length-1?'Finish Challenge →':'Next Stage →'}
+function nextStage(){if(state.stage<5){state.stage++;renderStage()}else{lens.innerHTML=`<p>${state.ch.q}</p><ul><li>Did players find their own solutions?</li><li>Did the scoring make the game problem matter?</li><li>Did players adapt when the opponent changed?</li><li>Could you leave the court for 2–3 minutes and have the Challenge keep working?</li></ul>`;why.innerHTML=`<span class="pill">WHY THIS WORKS</span><p>${state.ch.summary}</p><p>The progression moves from intention and exploration to interaction, adaptation and transfer. The coach changes the environment rather than prescribing the technical answer.</p>`;show('s6')}}
+function prevStage(){if(state.stage>0){state.stage--;renderStage()}else show('s4')}
+function setupRatings(){for(let i=1;i<=7;i++){let d=document.getElementById('r'+i);d.innerHTML=[1,2,3,4,5].map(v=>`<button onclick="rate(${i},${v})">${v}</button>`).join('')}}
+function rate(i,v){state.ratings[i]=v;document.querySelectorAll('#r'+i+' button').forEach((b,j)=>b.classList.toggle('sel',j===v-1))}
+function saveFeedback(){let data={date:new Date().toISOString(),testerName:state.testerName,challenge:state.ch.title,gameSituation:state.sit.name,strategy:state.str,setup:state.setup,stagesCompleted:state.stage+1,reuse:reuse.value,ratings:state.ratings,bestStage:bestStage.value,worked:worked.value,change:change.value,recommend:rec.value};let all=JSON.parse(localStorage.getItem('ti_feedback')||'[]');all.push(data);localStorage.setItem('ti_feedback',JSON.stringify(all));saved.style.display='block'}
+function startOver(){state={sit:null,str:null,ch:null,setup:null,stage:0,ratings:{},testerName:localStorage.getItem('ti_tester_name')||''};saved.style.display='none';render();show('s1')}
+const situationsEl=document.getElementById('situations'),strategiesEl=document.getElementById('strategies');render();setupRatings();
 </script>
 </body>
 </html>

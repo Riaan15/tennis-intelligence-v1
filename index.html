@@ -344,7 +344,7 @@ function render(){
     });
   }
 }
-function pickSit(id){state.sit=situations.find(x=>x.id===id);show('s2')}
+function pickSit(id){state.sit=situations.find(x=>x.id===id);render();show('s2')}
 function pickStr(str){
   state.str=str;
   const cs=C.filter(c=>c.s===state.sit.id&&c.str===str);

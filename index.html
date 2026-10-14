@@ -334,12 +334,12 @@ function render(){
     const strEl=document.getElementById('strategies');
     strEl.innerHTML='';
     strategies.forEach(st=>{
-      const count=C.filter(c=>c.s===state.sit.id && c.str===st.id).length;
+      const count=C.filter(c=>c.s===state.sit.id && c.str===st).length;
       const d=document.createElement('div');
       d.className='panel card '+(count?'':'disabled');
-      d.innerHTML='<div class="card-title">'+st.name+'</div><div class="card-sub">'+st.desc+'</div>'+
+      d.innerHTML='<div class="card-title">'+st+'</div><div class="card-sub">Challenges built for this strategy</div>'+
         (count?'<div class="status available">'+count+' CHALLENGE'+(count===1?'':'S')+'</div>':'<div class="status soon">COMING SOON</div>');
-      if(count) d.onclick=()=>pickStr(st.id);
+      if(count) d.onclick=()=>pickStr(st);
       strEl.appendChild(d);
     });
   }
